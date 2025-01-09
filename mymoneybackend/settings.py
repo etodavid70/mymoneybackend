@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-+45vsfd%va0!97d=xzqw8z&8fnrslg&*82(crww_^@yn@b6pud
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['flobooks.pythonanywhere.com']
 
 
 # Application definition
