@@ -1,0 +1,24 @@
+POST https://flobooks.pythonanywhere.com/auth/phone/
+Content-Type: application/json
+
+{
+"phone_number": "08039907187"
+}
+
+###
+POST http://127.0.0.1:8000/auth/phone/
+Content-Type: application/json
+
+{
+"phone_number": "08039907187"
+}
+
+
+###
+POST http://127.0.0.1:8000/auth/verify-phone/
+Content-Type: application/json
+
+{
+"phone_number": "08039907187",
+"otp": "336242"
+}

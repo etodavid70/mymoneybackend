@@ -1,0 +1,1 @@
+https://dev.to/rupesh_mishra/implementing-email-and-mobile-otp-verification-in-django-a-comprehensive-guide-4o

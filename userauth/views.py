@@ -1,5 +1,7 @@
-from django.shortcuts import render
 
+import random
+from django.shortcuts import render
+from django.core.cache import cache
 # Create your views here.
 from django.shortcuts import render
 
@@ -15,10 +17,35 @@ class PhoneVerificationView(APIView):
         serializer = PhoneVerificationSerializer(data=request.data)
         if serializer.is_valid():
             phone_number = serializer.validated_data['phone_number']
-            # Generate OTP and send via SMS (e.g., Twilio)
-            # otp = generate_otp()
-            # send_sms(phone_number, otp)
-            return Response({'message': 'OTP sent to phone number.'}, status=status.HTTP_200_OK)
+
+            user = CustomUser.objects.filter(phone_number=phone_number).first()
+
+            if user:
+                if user.is_phone_verified:
+                    return Response({'message': 'Phone number is already verified. Proceed to the next authentication step.'}, status=status.HTTP_200_OK)
+                
+                # If user exists but phone number is not verified, proceed with OTP verification
+                return Response({'message': 'User already exists. Please verify your phone number with the OTP sent.'}, status=status.HTTP_200_OK)
+
+            # If no user found, create a new user
+            user = CustomUser.objects.create(
+                username=phone_number,  # You can customize this as needed
+                phone_number=phone_number,
+                authentication_stage=1,  # Start at the first stage (phone verification)
+            )
+            user.save()
+            user.save()
+            print(f"New user created with phone number: {phone_number}")
+            otp = random.randint(100000, 999999)
+        
+        # Store OTP and phone number in cache for 5 minutes
+            cache_key = f"otp_{phone_number}"
+            cache.set(cache_key, otp, timeout=300)  # 300 seconds = 5 minutes
+        
+        
+            print(f"OTP for {phone_number} is {otp}")
+            return Response({'message': f'OTP sent to phone number.{otp}'}, status=status.HTTP_200_OK)
+            # return Response({'message': 'User already exists. Please verify your phone number with the OTP sent.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyPhoneOTPView(APIView):
@@ -27,13 +54,30 @@ class VerifyPhoneOTPView(APIView):
         if serializer.is_valid():
             phone_number = serializer.validated_data['phone_number']
             otp = serializer.validated_data.get('otp')
+            print(f"phone number :{phone_number}")
+            cache_key = f"otp_{phone_number}"
+            print(f"cache key :{cache_key}")
+            cached_otp = cache.get(cache_key)
+            print(f"otp {cached_otp}")
+        
+            if cached_otp is None:
+                return Response({'error': 'OTP expired or invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+            if str(cached_otp) == str(otp):
+            # OTP is valid
+                # return Response({'message': 'Phone number verified successfully.'}, status=status.HTTP_200_OK)
             # Validate OTP logic here
-            user = CustomUser.objects.filter(phone_number=phone_number).first()
-            if user and otp_is_valid(otp):  # Replace with OTP validation logic
-                user.is_phone_verified = True
-                user.authentication_stage = 2
-                user.save()
-                return Response({'message': 'Phone number verified.'}, status=status.HTTP_200_OK)
+                user = CustomUser.objects.filter(phone_number=phone_number).first()
+                print (f"user {user}")
+                if user:  # Replace with OTP validation logic
+                    user.is_phone_verified = True
+                    user.authentication_stage = 2
+                    user.save()
+            
+                    return Response({'message': 'Phone number verified.'}, status=status.HTTP_200_OK)
+                return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+            
             return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
