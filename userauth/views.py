@@ -1,10 +1,17 @@
 
 import random
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils.crypto import get_random_string
+
 from django.shortcuts import render
 from django.core.cache import cache
 # Create your views here.
 from django.shortcuts import render
-
+from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+ 
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,25 +24,16 @@ class PhoneVerificationView(APIView):
         serializer = PhoneVerificationSerializer(data=request.data)
         if serializer.is_valid():
             phone_number = serializer.validated_data['phone_number']
-
             user = CustomUser.objects.filter(phone_number=phone_number).first()
 
-            if user:
-                if user.is_phone_verified:
-                    return Response({'message': 'Phone number is already verified. Proceed to the next authentication step.'}, status=status.HTTP_200_OK)
-                
-                # If user exists but phone number is not verified, proceed with OTP verification
-                return Response({'message': 'User already exists. Please verify your phone number with the OTP sent.'}, status=status.HTTP_200_OK)
+            #checks if the user exists
 
-            # If no user found, create a new user
-            user = CustomUser.objects.create(
-                username=phone_number,  # You can customize this as needed
-                phone_number=phone_number,
-                authentication_stage=1,  # Start at the first stage (phone verification)
-            )
-            user.save()
-            user.save()
-            print(f"New user created with phone number: {phone_number}")
+            if user:
+                return Response({'message': 'phone number already exists. Please verify your email.'}, status=status.HTTP_200_OK)
+
+
+            
+            # print(f"New user created with phone number: {phone_number}")
             otp = random.randint(100000, 999999)
         
         # Store OTP and phone number in cache for 5 minutes
@@ -44,11 +42,14 @@ class PhoneVerificationView(APIView):
         
         
             print(f"OTP for {phone_number} is {otp}")
-            return Response({'message': f'OTP sent to phone number.{otp}'}, status=status.HTTP_200_OK)
+            return Response({'message': f'OTP sent to phone number. {otp}',
+           
+            
+            }, status=status.HTTP_200_OK)
             # return Response({'message': 'User already exists. Please verify your phone number with the OTP sent.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class VerifyPhoneOTPView(APIView):
+class VerifyPhoneOTPView(APIView):  
     def post(self, request):
         serializer = PhoneVerificationSerializer(data=request.data)
         if serializer.is_valid():
@@ -67,15 +68,28 @@ class VerifyPhoneOTPView(APIView):
             # OTP is valid
                 # return Response({'message': 'Phone number verified successfully.'}, status=status.HTTP_200_OK)
             # Validate OTP logic here
-                user = CustomUser.objects.filter(phone_number=phone_number).first()
-                print (f"user {user}")
-                if user:  # Replace with OTP validation logic
-                    user.is_phone_verified = True
-                    user.authentication_stage = 2
-                    user.save()
-            
-                    return Response({'message': 'Phone number verified.'}, status=status.HTTP_200_OK)
-                return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+                user = CustomUser.objects.create(
+                # username=phone_number,  # You can customize this as needed
+                phone_number=phone_number,
+                authentication_stage=2,  # Start at the first stage (phone verification)
+                 email=None, 
+                 is_phone_verified=True
+            )
+
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token) 
+               
+                # user.is_phone_verified = True
+                # user.authentication_stage = 2
+                # user.save()
+                # token, _ = Token.objects.get_or_create(user=user)
+
+        
+                return Response({'message': 'Phone number verified and saved',
+                'access_token': access_token
+                
+                }, status=status.HTTP_200_OK)
+                # return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
             
             return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
@@ -85,32 +99,35 @@ class VerifyPhoneOTPView(APIView):
 
 
 class SendEmailVerificationView(APIView):
+    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = EmailVerificationSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            user = CustomUser.objects.filter(email=email).first()
-            if user:
-                user.generate_email_verification_code()
+            # user = CustomUser.objects.filter(email=email).first()
+            user= request.user
+            print(f"user {user}")
+            
+            user.generate_email_verification_code()
                 # Send email with the verification code
-                send_mail(
-                    'Your Email Verification Code',
-                    f'Your verification code is {user.email_verification_code}',
-                    'no-reply@yourdomain.com',
-                    [email],
-                )
-                return Response({'message': 'Verification code sent to email.'}, status=status.HTTP_200_OK)
-            return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+               
+            return Response({'message': f'Verification code sent to email.  {user.email_verification_code}'}, status=status.HTTP_200_OK)
+            # return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmailView(APIView):
+    # authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = EmailVerificationSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             verification_code = serializer.validated_data['verification_code']
-            user = CustomUser.objects.filter(email=email).first()
+            user = request.user
+            print(user, user.email_verification_code)
             if user and user.email_verification_code == verification_code:
+                user.email=email
                 user.is_email_verified = True
                 user.authentication_stage = 3  # Progress to the next stage
                 user.save()

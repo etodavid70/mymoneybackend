@@ -10,7 +10,7 @@ POST http://127.0.0.1:8000/auth/phone/
 Content-Type: application/json
 
 {
-"phone_number": "08039907187"
+"phone_number": "11111111118"
 }
 
 
@@ -19,6 +19,27 @@ POST http://127.0.0.1:8000/auth/verify-phone/
 Content-Type: application/json
 
 {
-"phone_number": "08039907187",
-"otp": "336242"
+"phone_number": "11111111118",
+"otp": "679943"
+}
+
+###
+
+POST http://127.0.0.1:8000/auth/send-email/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MTYyNjQ3LCJpYXQiOjE3MzcxNjIzNDcsImp0aSI6IjJjMWQ4MTRjNWRhZDQ5M2U5MTQ0NzgwMmNiZjEzODAyIiwidXNlcl9pZCI6OH0.EGZQF2nwOi4Dtg49FHwyogUN4yKo5zoGURlfYHntHok
+
+{
+"email": "david@gmail.com"
+}
+
+###
+
+POST http://127.0.0.1:8000/auth/verify-email/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3MTYyNjQ3LCJpYXQiOjE3MzcxNjIzNDcsImp0aSI6IjJjMWQ4MTRjNWRhZDQ5M2U5MTQ0NzgwMmNiZjEzODAyIiwidXNlcl9pZCI6OH0.EGZQF2nwOi4Dtg49FHwyogUN4yKo5zoGURlfYHntHok
+
+{
+"email": "david@gmail.com",
+"verification_code": "599821"
 }
