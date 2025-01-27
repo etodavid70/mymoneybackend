@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
-from .serializers import PhoneVerificationSerializer, EmailVerificationSerializer
+from .serializers import PhoneVerificationSerializer, EmailVerificationSerializer,PasscodeSetupSerializer,BVNVerificationSerializer
 from django.contrib.auth.hashers import make_password
 
 class PhoneVerificationView(APIView):
@@ -27,12 +27,8 @@ class PhoneVerificationView(APIView):
             user = CustomUser.objects.filter(phone_number=phone_number).first()
 
             #checks if the user exists
-
             if user:
                 return Response({'message': 'phone number already exists. Please verify your email.'}, status=status.HTTP_200_OK)
-
-
-            
             # print(f"New user created with phone number: {phone_number}")
             otp = random.randint(100000, 999999)
         
@@ -111,7 +107,7 @@ class SendEmailVerificationView(APIView):
             
             user.generate_email_verification_code()
                 # Send email with the verification code
-               
+                   
             return Response({'message': f'Verification code sent to email.  {user.email_verification_code}'}, status=status.HTTP_200_OK)
             # return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -129,7 +125,8 @@ class VerifyEmailView(APIView):
             if user and user.email_verification_code == verification_code:
                 user.email=email
                 user.is_email_verified = True
-                user.authentication_stage = 3  # Progress to the next stage
+                user.authentication_stage = 3 
+                # Progress to the next stage
                 user.save()
                 return Response({'message': 'Email verified successfully.'}, status=status.HTTP_200_OK)
             return Response({'error': 'Invalid verification code.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -137,6 +134,7 @@ class VerifyEmailView(APIView):
 
 
 class PasscodeSetupView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = PasscodeSetupSerializer(data=request.data)
         if serializer.is_valid():
@@ -152,13 +150,13 @@ class PasscodeSetupView(APIView):
 
 
 class BVNVerificationView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = BVNVerificationSerializer(data=request.data)
         if serializer.is_valid():
             bvn = serializer.validated_data['bvn']
             # Call external API to validate BVN and fetch details
-            # response = call_bvn_api(bvn)
-            # Mocked response:
+        
             response = {
                 'status': 'success',
                 'data': {

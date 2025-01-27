@@ -9,6 +9,5 @@ urlpatterns = [
     path('passcode/', PasscodeSetupView.as_view(), name='passcode-setup'),
     path('bvn/', BVNVerificationView.as_view(), name='bvn-verification'),
     path('send-email/', SendEmailVerificationView.as_view(), name='send-email-verification'),
-    path('verify-email/', VerifyEmailView.as_view(), name='verify-email'),
-
+    path('verify-email/', VerifyEmailView.as_view(), name='verify-email')
 ]

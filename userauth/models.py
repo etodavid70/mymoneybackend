@@ -50,7 +50,7 @@ class CustomUser(AbstractUser):
     username = None
     phone_number = models.CharField(max_length=15, unique=True)
     USERNAME_FIELD = 'phone_number'
-    email = models.EmailField(unique=True,  blank=True, null=True)
+    email = models.EmailField(verbose_name="Email", unique=True,  blank=True, null=True)
     passcode = models.CharField(max_length=128)  # Hashed version
     bvn = models.CharField(max_length=11, blank=True, null=True)
     nin = models.CharField(max_length=11, blank=True, null=True)
