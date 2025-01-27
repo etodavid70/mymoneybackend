@@ -116,6 +116,7 @@ class VerifyEmailView(APIView):
     # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     def post(self, request):
+        
         serializer = EmailVerificationSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
@@ -126,9 +127,16 @@ class VerifyEmailView(APIView):
                 user.email=email
                 user.is_email_verified = True
                 user.authentication_stage = 3 
+                try:
+                # Attempt to save the user
+                    user.save()
+                    return Response({'message': 'Email verified successfully.'}, status=status.HTTP_200_OK)
+                except IntegrityError as e:
+                # Handle the IntegrityError (e.g., unique constraint violation for email)
+                    return Response(
+                    {'error': f'this email has been used: {str(e)}'},
+                    status=status.HTTP_400_BAD_REQUEST)
                 # Progress to the next stage
-                user.save()
-                return Response({'message': 'Email verified successfully.'}, status=status.HTTP_200_OK)
             return Response({'error': 'Invalid verification code.'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
