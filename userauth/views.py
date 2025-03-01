@@ -2,7 +2,7 @@
 import random
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.crypto import get_random_string
-
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.core.cache import cache
 # Create your views here.
@@ -108,26 +108,24 @@ class SendEmailVerificationView(APIView):
     # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     def post(self, request):
-        serializer = EmailSendingSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            # user = CustomUser.objects.filter(email=email).first()
-            user= request.user
-            print(f"user {user}")
-
-            #this creates an email verification code and saves for the user
-            
-            user.generate_email_verification_code()
-
-            
+        try:
+            serializer = EmailSendingSerializer(data=request.data)
+            if serializer.is_valid():           
+                email = serializer.validated_data['email']
+                user= request.user
+                user_email = CustomUser.objects.filter(email=user.email).first()
+                #this creates an email verification code and saves for the user           
+                user.generate_email_verification_code()
                 # Send email with the verification code
-                #and bind the code to the email, save this email temporarily
-            user.email=email
-            user.save()
-                   
-            return Response({'message': f'Verification code sent to email.  {user.email_verification_code}'}, status=status.HTTP_200_OK)
-            # return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    #and bind the code to the email, save this email temporarily
+                user.email=email
+                user.save()
+                    
+                return Response({'message': f'Verification code sent to email.  {user.email_verification_code}'}, status=status.HTTP_200_OK)
+                # return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError as e:
+                return Response({"error": "email is used already"}, status= status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmailView(APIView):
     # authentication_classes = [TokenAuthentication]

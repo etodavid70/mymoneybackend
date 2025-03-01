@@ -5,50 +5,42 @@ Content-Type: application/json
 "phone_number": "08039907188"
 }
 
-###
-POST http://127.0.0.1:8000/auth/phone/
-Content-Type: application/json
-
-{
-"phone_number": "00000000000"
-}
 
 
 ###
-POST http://127.0.0.1:8000/auth/verify-phone/
+POST https://flobooks.pythonanywhere.com/auth/verify-phone/
 Content-Type: application/json
 
 {
-"phone_number": "00000000000",
-"otp": "989676"
+"phone_number": "08039907188",
+"otp": "569166"
 }
 
 ###
 
-POST http://127.0.0.1:8000/auth/send-email/
+POST https://flobooks.pythonanywhere.com/auth/send-email/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg1NTM5LCJpYXQiOjE3NDA3ODUyMzksImp0aSI6IjAzMjVhMTY1NjYzOTRiY2ZhYTc5Zjc4MGM2ZWMzM2NhIiwidXNlcl9pZCI6MTZ9.zRS9Afia9e614-7P5fqzYA1kXS7RCOI4uJ58W_t5EAI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODY5OTUzLCJpYXQiOjE3NDA4Njk2NTMsImp0aSI6ImFmNmE0NzRkNzMwNDQzODZhY2U5MjMyZThmYmJlM2FhIiwidXNlcl9pZCI6MTd9.i-25b1vhv7aWicVQdtVLsUdKVdFkIWjQk0AKOSTMrio
 
 {
 "email": "sleep1@gmail.com"
-
 }
 
 ###
 
-POST http://127.0.0.1:8000/auth/verify-email/
+POST https://flobooks.pythonanywhere.com/auth/verify-email/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg2MzUxLCJpYXQiOjE3NDA3ODYwNTEsImp0aSI6ImUyN2Y0YzQwNjYyYTQ2MTVhZjhmMTY5ZDcyNTBlZGFkIiwidXNlcl9pZCI6MTZ9.MwSsAN3J5-Z5DZxVBs29l6WlLkVn6yKpuWUWh8WKkUY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODY5MDA1LCJpYXQiOjE3NDA4Njg3MDUsImp0aSI6IjY1OTRlY2U1MjIzYTRhMWY4MzE1MmRmNDA5MGI0MjE2IiwidXNlcl9pZCI6MTd9.M1qw36fZEQuVwGmcXBev4QWl7bJFhN-2uBmpNii5CxE
 
 {
-"verification_code": "183508"
+"verification_code": "304142"
 }
 
 ###
 
-POST http://127.0.0.1:8000/auth/passcode/
+POST https://flobooks.pythonanywhere.com/auth/passcode/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg2MzUxLCJpYXQiOjE3NDA3ODYwNTEsImp0aSI6ImUyN2Y0YzQwNjYyYTQ2MTVhZjhmMTY5ZDcyNTBlZGFkIiwidXNlcl9pZCI6MTZ9.MwSsAN3J5-Z5DZxVBs29l6WlLkVn6yKpuWUWh8WKkUY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODY5MDA1LCJpYXQiOjE3NDA4Njg3MDUsImp0aSI6IjY1OTRlY2U1MjIzYTRhMWY4MzE1MmRmNDA5MGI0MjE2IiwidXNlcl9pZCI6MTd9.M1qw36fZEQuVwGmcXBev4QWl7bJFhN-2uBmpNii5CxE
 
 {
 "passcode": "215436"
@@ -58,7 +50,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ###
 
-POST http://127.0.0.1:8000/auth/bvn/
+POST https://flobooks.pythonanywhere.com/auth/bvn/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg2MzUxLCJpYXQiOjE3NDA3ODYwNTEsImp0aSI6ImUyN2Y0YzQwNjYyYTQ2MTVhZjhmMTY5ZDcyNTBlZGFkIiwidXNlcl9pZCI6MTZ9.MwSsAN3J5-Z5DZxVBs29l6WlLkVn6yKpuWUWh8WKkUY
 
