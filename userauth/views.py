@@ -31,11 +31,11 @@ class PhoneVerificationView(APIView):
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token) 
 
-                user_data = CustomUserSerializer(user).data
+                # user_data = CustomUserSerializer(user).data
 
                 return Response({'message': 'phone number already exists. Please verify your email.',
                 'access_token': access_token,
-                "details": f"{user_data}"
+                # "details": f"{user_data}"
                 }, status=status.HTTP_200_OK,)
             # print(f"New user created with phone number: {phone_number}")
             otp = random.randint(100000, 999999)
