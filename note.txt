@@ -1,0 +1,9 @@
+if phone is verified, you cannot verify phone again
+
+so check first if the boolean field is true or false
+
+if email is verified, you cannot verify email again
+
+so check first if the boolean field is true or false
+
+

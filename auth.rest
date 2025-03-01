@@ -10,7 +10,7 @@ POST http://127.0.0.1:8000/auth/phone/
 Content-Type: application/json
 
 {
-"phone_number": "11111111000"
+"phone_number": "00000000000"
 }
 
 
@@ -19,38 +19,36 @@ POST http://127.0.0.1:8000/auth/verify-phone/
 Content-Type: application/json
 
 {
-"phone_number": "11111111000",
-"otp": "950429"
+"phone_number": "00000000000",
+"otp": "989676"
 }
 
 ###
 
 POST http://127.0.0.1:8000/auth/send-email/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTQ0NjcyLCJpYXQiOjE3Mzc5NDQzNzIsImp0aSI6ImE3ODE0YzQ5ZTM5NTQyMGY5ZDkxNmMyMDdmYmZhZTU4IiwidXNlcl9pZCI6MTN9.GBFYaBWq5i1L8p03bE6FsFI0TBD3h-_qHC6_ezW-hZw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg1NTM5LCJpYXQiOjE3NDA3ODUyMzksImp0aSI6IjAzMjVhMTY1NjYzOTRiY2ZhYTc5Zjc4MGM2ZWMzM2NhIiwidXNlcl9pZCI6MTZ9.zRS9Afia9e614-7P5fqzYA1kXS7RCOI4uJ58W_t5EAI
 
 {
-"email": "david2@gmail.com"
+"email": "sleep1@gmail.com"
+
 }
 
 ###
 
 POST http://127.0.0.1:8000/auth/verify-email/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTQ0NjcyLCJpYXQiOjE3Mzc5NDQzNzIsImp0aSI6ImE3ODE0YzQ5ZTM5NTQyMGY5ZDkxNmMyMDdmYmZhZTU4IiwidXNlcl9pZCI6MTN9.GBFYaBWq5i1L8p03bE6FsFI0TBD3h-_qHC6_ezW-hZw
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg2MzUxLCJpYXQiOjE3NDA3ODYwNTEsImp0aSI6ImUyN2Y0YzQwNjYyYTQ2MTVhZjhmMTY5ZDcyNTBlZGFkIiwidXNlcl9pZCI6MTZ9.MwSsAN3J5-Z5DZxVBs29l6WlLkVn6yKpuWUWh8WKkUY
 
 {
-"email": "david2@gmail.com",
-"verification_code": "548610"
+"verification_code": "183508"
 }
 
 ###
 
 POST http://127.0.0.1:8000/auth/passcode/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTQ0NjcyLCJpYXQiOjE3Mzc5NDQzNzIsImp0aSI6ImE3ODE0YzQ5ZTM5NTQyMGY5ZDkxNmMyMDdmYmZhZTU4IiwidXNlcl9pZCI6MTN9.GBFYaBWq5i1L8p03bE6FsFI0TBD3h-_qHC6_ezW-hZw
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg2MzUxLCJpYXQiOjE3NDA3ODYwNTEsImp0aSI6ImUyN2Y0YzQwNjYyYTQ2MTVhZjhmMTY5ZDcyNTBlZGFkIiwidXNlcl9pZCI6MTZ9.MwSsAN3J5-Z5DZxVBs29l6WlLkVn6yKpuWUWh8WKkUY
 
 {
 "passcode": "215436"
@@ -62,7 +60,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 POST http://127.0.0.1:8000/auth/bvn/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTQzNjY4LCJpYXQiOjE3Mzc5NDMzNjgsImp0aSI6IjhhNDIyZWE2MWQ2NzRhM2M5MjM5ZGY1MzIxMTk4ZTgxIiwidXNlcl9pZCI6MTJ9.axPJJPjOHPRZN_Ipv0_QapeepYMd_DuW3reeYg4Heb
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwNzg2MzUxLCJpYXQiOjE3NDA3ODYwNTEsImp0aSI6ImUyN2Y0YzQwNjYyYTQ2MTVhZjhmMTY5ZDcyNTBlZGFkIiwidXNlcl9pZCI6MTZ9.MwSsAN3J5-Z5DZxVBs29l6WlLkVn6yKpuWUWh8WKkUY
+
 
 {
 "bvn": "11111111111"

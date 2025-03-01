@@ -16,19 +16,27 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
-from .serializers import PhoneVerificationSerializer, EmailVerificationSerializer,PasscodeSetupSerializer,BVNVerificationSerializer
+from .serializers import PhoneVerificationSerializer, EmailVerificationSerializer,PasscodeSetupSerializer,BVNVerificationSerializer, EmailSendingSerializer, PhoneSerializer, CustomUserSerializer
 from django.contrib.auth.hashers import make_password
 
 class PhoneVerificationView(APIView):
     def post(self, request):
-        serializer = PhoneVerificationSerializer(data=request.data)
+        serializer =PhoneSerializer(data=request.data)
         if serializer.is_valid():
             phone_number = serializer.validated_data['phone_number']
             user = CustomUser.objects.filter(phone_number=phone_number).first()
 
             #checks if the user exists
             if user:
-                return Response({'message': 'phone number already exists. Please verify your email.'}, status=status.HTTP_200_OK)
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token) 
+
+                user_data = CustomUserSerializer(user).data
+
+                return Response({'message': 'phone number already exists. Please verify your email.',
+                'access_token': access_token,
+                "details": f"{user_data}"
+                }, status=status.HTTP_200_OK,)
             # print(f"New user created with phone number: {phone_number}")
             otp = random.randint(100000, 999999)
         
@@ -61,6 +69,8 @@ class VerifyPhoneOTPView(APIView):
                 return Response({'error': 'OTP expired or invalid.'}, status=status.HTTP_400_BAD_REQUEST)
         
             if str(cached_otp) == str(otp):
+
+                
             # OTP is valid
                 # return Response({'message': 'Phone number verified successfully.'}, status=status.HTTP_200_OK)
             # Validate OTP logic here
@@ -98,15 +108,22 @@ class SendEmailVerificationView(APIView):
     # authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     def post(self, request):
-        serializer = EmailVerificationSerializer(data=request.data)
+        serializer = EmailSendingSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             # user = CustomUser.objects.filter(email=email).first()
             user= request.user
             print(f"user {user}")
+
+            #this creates an email verification code and saves for the user
             
             user.generate_email_verification_code()
+
+            
                 # Send email with the verification code
+                #and bind the code to the email, save this email temporarily
+            user.email=email
+            user.save()
                    
             return Response({'message': f'Verification code sent to email.  {user.email_verification_code}'}, status=status.HTTP_200_OK)
             # return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
@@ -119,12 +136,14 @@ class VerifyEmailView(APIView):
         
         serializer = EmailVerificationSerializer(data=request.data)
         if serializer.is_valid():
-            email = serializer.validated_data['email']
+            
             verification_code = serializer.validated_data['verification_code']
             user = request.user
-            print(user, user.email_verification_code)
+            print(user.email)
+            # print(verification_code, user.email_verification_code)
             if user and user.email_verification_code == verification_code:
-                user.email=email
+                
+                
                 user.is_email_verified = True
                 user.authentication_stage = 3 
                 try:

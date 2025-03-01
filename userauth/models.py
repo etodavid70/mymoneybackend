@@ -33,20 +33,7 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     
-    # groups = models.ManyToManyField(
-    #       Group,
-    #       related_name="customuser_set",  # Change the related name
-    #       blank=True,
-    #       help_text="The groups this user belongs to.",
-    #       verbose_name="groups",
-    #   )
-    # user_permissions = models.ManyToManyField(
-    #       Permission,
-    #       related_name="customuser_permissions",  # Change the related name
-    #       blank=True,
-    #       help_text="Specific permissions for this user.",
-    #       verbose_name="user permissions",
-    #   )
+    
     username = None
     phone_number = models.CharField(max_length=15, unique=True)
     USERNAME_FIELD = 'phone_number'
